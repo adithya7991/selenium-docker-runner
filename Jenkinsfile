@@ -18,10 +18,19 @@ pipeline{
             }   
 
         }
+        /*
+        Moving this stage under post, bcz if kill the job @ any stage, next stages will not b executed
+        post with always acts like finally block, always executes
         stage('Stop Grid'){
             steps{
                 bat "docker-compose down"
             }            
+        }*/
+    }
+    post{
+        always{
+            archiveArtifacts artifacts: 'output/**'
+            bat "docker-compose down"
         }
     }
 }

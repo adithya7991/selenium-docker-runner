@@ -33,7 +33,7 @@ services:
   search-module:
     image: 1151997/automation-code:latest
     volumes:
-      - D:\Udemy\DevopsTesting\AutomationTesting\Docker\Sample\selenium-docker-master\search-module-output[volume-mapped]:/code/test-output
+      - .\output[volume-mapped]\search-module:/code/test-output
     environment:
       - HOST=hub
       - BROWSER=chrome
@@ -45,7 +45,7 @@ services:
   book-flight-module:
     image: 1151997/automation-code:latest
     volumes:
-      - D:\Udemy\DevopsTesting\AutomationTesting\Docker\Sample\selenium-docker-master\book-flight-module-output[volume-mapped]:/code/test-output
+      - .\output[volume-mapped]\book-flight-module:/code/test-output
     environment:
       - HOST=hub
       - BROWSER=firefox
