@@ -1,0 +1,55 @@
+version: '3'
+services:
+  hub:
+    image: selenium/hub:4.1.1
+    container_name: hub-container
+
+  chrome:
+    image: selenium/node-chrome:4.1.1
+    # container_name: chrome-container 
+    # If this container will b scaled in future, dont give name
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      # To increase concurrency
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_MAX_SESSIONS=3
+    depends_on:
+      - hub
+    shm_size: '2g'
+
+  firefox:
+    image: selenium/node-firefox:4.1.1
+    # container_name: firefox-container
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    depends_on:
+      - hub
+    shm_size: '2g'
+
+  search-module:
+    image: 1151997/automation-code:latest
+    volumes:
+      - D:\Udemy\DevopsTesting\AutomationTesting\Docker\Sample\selenium-docker-master\search-module-output[volume-mapped]:/code/test-output
+    environment:
+      - HOST=hub
+      - BROWSER=chrome
+      - MODULE=search-module.xml
+    depends_on: 
+      - chrome
+      - firefox
+
+  book-flight-module:
+    image: 1151997/automation-code:latest
+    volumes:
+      - D:\Udemy\DevopsTesting\AutomationTesting\Docker\Sample\selenium-docker-master\book-flight-module-output[volume-mapped]:/code/test-output
+    environment:
+      - HOST=hub
+      - BROWSER=firefox
+      - MODULE=book-flight-module.xml
+    depends_on: 
+      - chrome
+      - firefox
